@@ -230,12 +230,12 @@ function renderPlayoffs() {
   const finalMatch = state.playoffs.find(p => p.id === 'playoff_2');
   
   // Map Consolation (3·4위전)
-  renderPlayoffTeam(el.playoffT1C, a2, '무적리그 2위', consolationMatch, a2?.id);
-  renderPlayoffTeam(el.playoffT2C, b2, '최강리그 2위', consolationMatch, b2?.id);
+  renderPlayoffTeam(el.playoffT1C, a2, '최강리그 2위', consolationMatch, a2?.id);
+  renderPlayoffTeam(el.playoffT2C, b2, '무적리그 2위', consolationMatch, b2?.id);
   
   // Map Final (결승전)
-  renderPlayoffTeam(el.playoffT1F, a1, '무적리그 1위', finalMatch, a1?.id);
-  renderPlayoffTeam(el.playoffT2F, b1, '최강리그 1위', finalMatch, b1?.id);
+  renderPlayoffTeam(el.playoffT1F, a1, '최강리그 1위', finalMatch, a1?.id);
+  renderPlayoffTeam(el.playoffT2F, b1, '무적리그 1위', finalMatch, b1?.id);
   
   // Display referee info
   if (consolationMatch) el.refConsolation.textContent = `심판: ${consolationMatch.referee}`;
@@ -368,7 +368,7 @@ function renderMatches() {
         </div>
         <div class="match-meta-secondary">
           <span><i class="fa-solid fa-user-tie"></i> 심판: ${match.referee}</span>
-          <span><i class="fa-solid fa-tags"></i> ${match.group_id === 'group_a' ? '무적리그' : '최강리그'} 예선</span>
+          <span><i class="fa-solid fa-tags"></i> ${match.group_id === 'group_a' ? '최강리그' : '무적리그'} 예선</span>
         </div>
       </div>
       
@@ -561,7 +561,7 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
   
   if (!match) return;
   
-  el.resultMatchInfo.textContent = `${match.week}차 ${match.day}요일 ${match.period} (${isPlayoff ? match.name : (match.group_id === 'group_a' ? '무적리그' : '최강리그') + ' 예선'})`;
+  el.resultMatchInfo.textContent = `${match.week}차 ${match.day}요일 ${match.period} (${isPlayoff ? match.name : (match.group_id === 'group_a' ? '최강리그' : '무적리그') + ' 예선'})`;
   
   // Set referee input value
   el.resultRefereeInput.value = match.referee || '';

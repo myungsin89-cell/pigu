@@ -12,11 +12,11 @@
   "groups": [
     {
       "id": "group_a",
-      "name": "무적리그"
+      "name": "최강리그"
     },
     {
       "id": "group_b",
-      "name": "최강리그"
+      "name": "무적리그"
     }
   ],
   "teams": {
@@ -98,7 +98,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A1",
       "result": null
@@ -109,7 +109,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B1",
       "team2_id": "B2",
       "result": null
@@ -120,7 +120,7 @@
       "day": "화",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A3",
       "team2_id": "A4",
       "result": null
@@ -131,7 +131,7 @@
       "day": "목",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A5",
       "team2_id": "A6",
       "result": null
@@ -142,7 +142,7 @@
       "day": "목",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B4",
       "team2_id": "B3",
       "result": null
@@ -153,7 +153,7 @@
       "day": "목",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "김성관",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A1",
       "team2_id": "A7",
       "result": null
@@ -164,7 +164,7 @@
       "day": "목",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "한승종",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B6",
       "team2_id": "B7",
       "result": null
@@ -175,7 +175,7 @@
       "day": "금",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A3",
       "result": null
@@ -186,7 +186,7 @@
       "day": "금",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "한승종",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B1",
       "team2_id": "B7",
       "result": null
@@ -197,7 +197,7 @@
       "day": "금",
       "period": "3교시 (10:40 ~ 11:20)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A5",
       "team2_id": "A4",
       "result": null
@@ -208,7 +208,7 @@
       "day": "금",
       "period": "3교시 (10:40 ~ 11:20)",
       "referee": "한승종",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B6",
       "team2_id": "B5",
       "result": null
@@ -219,7 +219,7 @@
       "day": "금",
       "period": "4교시 (11:30 ~ 12:10)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A6",
       "team2_id": "A7",
       "result": null
@@ -230,7 +230,7 @@
       "day": "금",
       "period": "4교시 (11:30 ~ 12:10)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B5",
       "team2_id": "B4",
       "result": null
@@ -241,7 +241,7 @@
       "day": "금",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A3",
       "team2_id": "A1",
       "result": null
@@ -252,7 +252,7 @@
       "day": "금",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "한승종",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B3",
       "team2_id": "B2",
       "result": null
@@ -263,7 +263,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A4",
       "result": null
@@ -274,7 +274,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B6",
       "team2_id": "B1",
       "result": null
@@ -285,7 +285,7 @@
       "day": "화",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B1",
       "team2_id": "B3",
       "result": null
@@ -296,7 +296,7 @@
       "day": "목",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "김성관",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A5",
       "team2_id": "A7",
       "result": null
@@ -307,7 +307,7 @@
       "day": "목",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B5",
       "team2_id": "B7",
       "result": null
@@ -318,7 +318,7 @@
       "day": "목",
       "period": "3교시 (10:40 ~ 11:20)",
       "referee": "김성관",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A6",
       "team2_id": "A1",
       "result": null
@@ -329,7 +329,7 @@
       "day": "목",
       "period": "4교시 (11:30 ~ 12:10)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B4",
       "team2_id": "B2",
       "result": null
@@ -340,7 +340,7 @@
       "day": "금",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A5",
       "result": null
@@ -351,7 +351,7 @@
       "day": "금",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "한승종",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B5",
       "team2_id": "B2",
       "result": null
@@ -362,7 +362,7 @@
       "day": "금",
       "period": "3교시 (10:40 ~ 11:20)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A3",
       "team2_id": "A6",
       "result": null
@@ -373,7 +373,7 @@
       "day": "금",
       "period": "3교시 (10:40 ~ 11:20)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B5",
       "team2_id": "B1",
       "result": null
@@ -384,7 +384,7 @@
       "day": "금",
       "period": "4교시 (11:30 ~ 12:10)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A7",
       "team2_id": "A4",
       "result": null
@@ -395,7 +395,7 @@
       "day": "금",
       "period": "4교시 (11:30 ~ 12:10)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B4",
       "team2_id": "B7",
       "result": null
@@ -406,7 +406,7 @@
       "day": "금",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "한승종",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A5",
       "team2_id": "A1",
       "result": null
@@ -417,7 +417,7 @@
       "day": "금",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B6",
       "team2_id": "B3",
       "result": null
@@ -428,7 +428,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A6",
       "result": null
@@ -439,7 +439,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B6",
       "team2_id": "B2",
       "result": null
@@ -450,7 +450,7 @@
       "day": "화",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A3",
       "team2_id": "A7",
       "result": null
@@ -461,7 +461,7 @@
       "day": "목",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "김성관",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A6",
       "team2_id": "A4",
       "result": null
@@ -472,7 +472,7 @@
       "day": "목",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B3",
       "team2_id": "B7",
       "result": null
@@ -483,7 +483,7 @@
       "day": "목",
       "period": "4교시 (11:30 ~ 12:10)",
       "referee": "김성관",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A1",
       "team2_id": "A4",
       "result": null
@@ -494,7 +494,7 @@
       "day": "목",
       "period": "3교시 (10:40 ~ 11:20)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B4",
       "team2_id": "B1",
       "result": null
@@ -505,7 +505,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A3",
       "team2_id": "A5",
       "result": null
@@ -516,7 +516,7 @@
       "day": "월",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B6",
       "team2_id": "B4",
       "result": null
@@ -527,7 +527,7 @@
       "day": "화",
       "period": "5교시 (13:00 ~ 13:40)",
       "referee": "이순희",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B5",
       "team2_id": "B3",
       "result": null
@@ -538,7 +538,7 @@
       "day": "목",
       "period": "1교시 (09:00 ~09:40)",
       "referee": "김성관",
-      "group_id": "group_a",
+      "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A7",
       "result": null
@@ -549,7 +549,7 @@
       "day": "목",
       "period": "2교시 (09:50 ~ 10:30)",
       "referee": "김성관",
-      "group_id": "group_b",
+      "group_id": "group_a",
       "team1_id": "B7",
       "team2_id": "B2",
       "result": null
@@ -565,12 +565,12 @@
       "referee": "김성관",
       "team1_source": {
         "type": "rank",
-        "group_id": "group_b",
+        "group_id": "group_a",
         "rank": 2
       },
       "team2_source": {
         "type": "rank",
-        "group_id": "group_a",
+        "group_id": "group_b",
         "rank": 2
       },
       "result": null
@@ -584,12 +584,12 @@
       "referee": "한승종",
       "team1_source": {
         "type": "rank",
-        "group_id": "group_b",
+        "group_id": "group_a",
         "rank": 1
       },
       "team2_source": {
         "type": "rank",
-        "group_id": "group_a",
+        "group_id": "group_b",
         "rank": 1
       },
       "result": null
