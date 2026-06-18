@@ -230,12 +230,12 @@ function renderPlayoffs() {
   const finalMatch = state.playoffs.find(p => p.id === 'playoff_2');
   
   // Map Consolation (3·4위전)
-  renderPlayoffTeam(el.playoffT1C, a2, '무적 2위', consolationMatch, a2?.id);
-  renderPlayoffTeam(el.playoffT2C, b2, '최강 2위', consolationMatch, b2?.id);
+  renderPlayoffTeam(el.playoffT1C, a2, '무적리그 2위', consolationMatch, a2?.id);
+  renderPlayoffTeam(el.playoffT2C, b2, '최강리그 2위', consolationMatch, b2?.id);
   
   // Map Final (결승전)
-  renderPlayoffTeam(el.playoffT1F, a1, '무적 1위', finalMatch, a1?.id);
-  renderPlayoffTeam(el.playoffT2F, b1, '최강 1위', finalMatch, b1?.id);
+  renderPlayoffTeam(el.playoffT1F, a1, '무적리그 1위', finalMatch, a1?.id);
+  renderPlayoffTeam(el.playoffT2F, b1, '최강리그 1위', finalMatch, b1?.id);
   
   // Display referee info
   if (consolationMatch) el.refConsolation.textContent = `심판: ${consolationMatch.referee}`;
