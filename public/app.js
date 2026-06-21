@@ -20,8 +20,10 @@ const el = {
   tabSubBtns: document.querySelectorAll('.tab-sub-btn'),
   tableGroupA: document.getElementById('table-group-a'),
   tableGroupB: document.getElementById('table-group-b'),
+  tableGroupManners: document.getElementById('table-group-manners'),
   standingsABody: document.getElementById('standings-a-body'),
   standingsBBody: document.getElementById('standings-b-body'),
+  standingsMannersBody: document.getElementById('standings-manners-body'),
   
   // Playoff Bracket
   playoffT1C: document.getElementById('playoff-t1-c'),
@@ -32,6 +34,10 @@ const el = {
   refFinal: document.getElementById('ref-final'),
   playoffConsolationBox: document.getElementById('playoff-consolation-box'),
   playoffFinalBox: document.getElementById('playoff-final-box'),
+  manners1stName: document.getElementById('manners-1st-name'),
+  manners1stScore: document.getElementById('manners-1st-score'),
+  manners2ndName: document.getElementById('manners-2nd-name'),
+  manners2ndScore: document.getElementById('manners-2nd-score'),
 
   // Matches Schedule
   filterTeam: document.getElementById('filter-team'),
@@ -66,6 +72,10 @@ const el = {
   vsT2WinBtn: document.getElementById('vs-t2-win-btn'),
   resultResetBtn: document.getElementById('result-reset-btn'),
   resultCancelBtn: document.getElementById('result-cancel-btn'),
+  mannersT1: document.getElementById('manners-t1'),
+  mannersT2: document.getElementById('manners-t2'),
+  mannersT1Name: document.getElementById('manners-t1-name'),
+  mannersT2Name: document.getElementById('manners-t2-name'),
   
   // Close buttons helper
   modalCloseBtns: document.querySelectorAll('.modal-close-btn')
@@ -120,6 +130,92 @@ function updateHeader() {
   }
 }
 
+// --- Calculate Manners & Order Scores ---
+function calculateAllManners() {
+  const mannersScores = {};
+  
+  // Initialize all teams
+  Object.values(state.teams).forEach(team => {
+    mannersScores[team.id] = {
+      id: team.id,
+      name: team.name,
+      group_id: team.group_id,
+      mannersPoints: 0
+    };
+  });
+  
+  // Calculate from regular matches
+  state.matches.forEach(match => {
+    if (match.result && match.result.manners) {
+      match.result.manners.forEach(teamId => {
+        if (mannersScores[teamId]) {
+          mannersScores[teamId].mannersPoints++;
+        }
+      });
+    }
+  });
+  
+  // Calculate from playoffs
+  state.playoffs.forEach(match => {
+    if (match.result && match.result.manners) {
+      match.result.manners.forEach(teamId => {
+        if (mannersScores[teamId]) {
+          mannersScores[teamId].mannersPoints++;
+        }
+      });
+    }
+  });
+  
+  return Object.values(mannersScores);
+}
+
+function calculateMannersStandings() {
+  const allManners = calculateAllManners();
+  
+  // Sort: Manners points (desc) -> Name (asc)
+  return allManners.sort((a, b) => {
+    if (b.mannersPoints !== a.mannersPoints) {
+      return b.mannersPoints - a.mannersPoints;
+    }
+    return a.name.localeCompare(b.name, 'ko');
+  });
+}
+
+function renderMannersStandings() {
+  const standings = calculateMannersStandings();
+  const tbody = el.standingsMannersBody;
+  if (!tbody) return;
+  
+  tbody.innerHTML = '';
+  
+  standings.forEach((team, index) => {
+    const rank = index + 1;
+    const tr = document.createElement('tr');
+    
+    if (rank === 1) tr.className = 'rank-row-1';
+    else if (rank === 2) tr.className = 'rank-row-2';
+    
+    let rankBadgeStr = `<span class="rank-badge">${rank}</span>`;
+    let teamNameStr = team.name;
+    if (rank === 1) {
+      teamNameStr = `<span class="rank-team-name"><i class="fa-solid fa-medal" style="color: #fbbf24; margin-right: 4px;"></i> ${team.name}</span>`;
+    } else if (rank === 2) {
+      teamNameStr = `<span class="rank-team-name"><i class="fa-solid fa-medal" style="color: #9ca3af; margin-right: 4px;"></i> ${team.name}</span>`;
+    }
+    
+    const leagueName = team.group_id === 'group_a' ? '최강리그' : '무적리그';
+    
+    tr.innerHTML = `
+      <td>${rankBadgeStr}</td>
+      <td>${teamNameStr}</td>
+      <td>${leagueName}</td>
+      <td style="font-weight: 800; color: #e11d48;">${team.mannersPoints}점</td>
+    `;
+    
+    tbody.appendChild(tr);
+  });
+}
+
 // --- Render Standings (실시간 순위 계산 및 렌더링) ---
 function renderStandings() {
   const standingsA = calculateStandings('group_a');
@@ -127,11 +223,13 @@ function renderStandings() {
   
   renderStandingsTable(standingsA, el.standingsABody);
   renderStandingsTable(standingsB, el.standingsBBody);
+  renderMannersStandings();
 }
 
 function calculateStandings(groupId) {
   // Get all teams in this group
   const groupTeams = Object.values(state.teams).filter(t => t.group_id === groupId);
+  const allManners = calculateAllManners();
   
   // Initialize standings data for each team
   const standings = {};
@@ -142,7 +240,8 @@ function calculateStandings(groupId) {
       played: 0,
       won: 0,
       lost: 0,
-      points: 0
+      points: 0,
+      mannersPoints: allManners.find(m => m.id === team.id)?.mannersPoints || 0
     };
   });
   
@@ -207,6 +306,7 @@ function renderStandingsTable(standings, tbody) {
       <td>${team.won}</td>
       <td>${team.lost}</td>
       <td>${team.points}</td>
+      <td style="font-weight: 700; color: #e11d48;">${team.mannersPoints}점</td>
     `;
     
     tbody.appendChild(tr);
@@ -240,6 +340,27 @@ function renderPlayoffs() {
   // Display referee info
   if (consolationMatch) el.refConsolation.textContent = `심판: ${consolationMatch.referee}`;
   if (finalMatch) el.refFinal.textContent = `심판: ${finalMatch.referee}`;
+  
+  // Render manners outstanding classes
+  const mannersStandings = calculateMannersStandings();
+  const m1 = mannersStandings[0];
+  const m2 = mannersStandings[1];
+  
+  if (m1) {
+    el.manners1stName.textContent = m1.name;
+    el.manners1stScore.textContent = `${m1.mannersPoints}점`;
+  } else {
+    el.manners1stName.textContent = '대기 중';
+    el.manners1stScore.textContent = '-점';
+  }
+  
+  if (m2) {
+    el.manners2ndName.textContent = m2.name;
+    el.manners2ndScore.textContent = `${m2.mannersPoints}점`;
+  } else {
+    el.manners2ndName.textContent = '대기 중';
+    el.manners2ndScore.textContent = '-점';
+  }
   
   // Attach admin edit handler to playoffs box if logged in
   if (state.adminPassword === '0000') {
@@ -414,21 +535,28 @@ function populateMappingInputs() {
 
 // --- Bind Events ---
 function bindEvents() {
-  // A조 vs B조 순위표 탭 전환
+  // A조 vs B조 vs 질서순위 순위표 탭 전환
   el.tabSubBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       el.tabSubBtns.forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
+      e.currentTarget.classList.add('active');
       
-      const group = e.target.getAttribute('data-group');
+      const group = e.currentTarget.getAttribute('data-group');
+      
+      el.tableGroupA.classList.add('hidden');
+      el.tableGroupB.classList.add('hidden');
+      el.tableGroupManners.classList.add('hidden');
+      
       if (group === 'a') {
         el.tableGroupA.classList.remove('hidden');
-        el.tableGroupB.classList.add('hidden');
         state.selectedStandingsGroup = 'group_a';
-      } else {
-        el.tableGroupA.classList.add('hidden');
+      } else if (group === 'b') {
         el.tableGroupB.classList.remove('hidden');
         state.selectedStandingsGroup = 'group_b';
+      } else if (group === 'manners') {
+        el.tableGroupManners.classList.remove('hidden');
+        state.selectedStandingsGroup = 'manners';
+        renderMannersStandings();
       }
     });
   });
@@ -569,28 +697,52 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
   el.vsT1Name.textContent = t1Name;
   el.vsT2Name.textContent = t2Name;
   
-  // Set Win buttons state
-  el.vsT1WinBtn.onclick = () => submitResult(matchId, team1Obj?.id, team2Obj?.id, el.resultRefereeInput.value.trim());
-  el.vsT2WinBtn.onclick = () => submitResult(matchId, team2Obj?.id, team1Obj?.id, el.resultRefereeInput.value.trim());
+  el.mannersT1Name.textContent = t1Name;
+  el.mannersT2Name.textContent = t2Name;
+  
+  // Set manners checkboxes state based on previous result
+  if (currentResult && currentResult.manners) {
+    el.mannersT1.checked = currentResult.manners.includes(team1Obj?.id);
+    el.mannersT2.checked = currentResult.manners.includes(team2Obj?.id);
+  } else {
+    el.mannersT1.checked = false;
+    el.mannersT2.checked = false;
+  }
   
   if (!team1Obj || !team2Obj) {
+    el.mannersT1.disabled = true;
+    el.mannersT2.disabled = true;
     el.vsT1WinBtn.disabled = true;
     el.vsT2WinBtn.disabled = true;
     el.resultResetBtn.disabled = true;
   } else {
+    el.mannersT1.disabled = false;
+    el.mannersT2.disabled = false;
     el.vsT1WinBtn.disabled = false;
     el.vsT2WinBtn.disabled = false;
     el.resultResetBtn.disabled = false;
   }
   
+  // Helper to gather selected manners team IDs
+  const getSelectedManners = () => {
+    const manners = [];
+    if (el.mannersT1.checked && team1Obj) manners.push(team1Obj.id);
+    if (el.mannersT2.checked && team2Obj) manners.push(team2Obj.id);
+    return manners;
+  };
+  
+  // Set Win buttons state
+  el.vsT1WinBtn.onclick = () => submitResult(matchId, team1Obj?.id, team2Obj?.id, el.resultRefereeInput.value.trim(), getSelectedManners());
+  el.vsT2WinBtn.onclick = () => submitResult(matchId, team2Obj?.id, team1Obj?.id, el.resultRefereeInput.value.trim(), getSelectedManners());
+  
   // Set result reset button
-  el.resultResetBtn.onclick = () => submitResult(matchId, null, null, el.resultRefereeInput.value.trim());
+  el.resultResetBtn.onclick = () => submitResult(matchId, null, null, el.resultRefereeInput.value.trim(), []);
   
   el.resultModal.classList.remove('hidden');
 }
-
+ 
 // --- Submit Result to Backend ---
-async function submitResult(matchId, winnerId, loserId, referee = "") {
+async function submitResult(matchId, winnerId, loserId, referee = "", manners = []) {
   try {
     const res = await fetch('/api/match/result', {
       method: 'POST',
@@ -600,7 +752,8 @@ async function submitResult(matchId, winnerId, loserId, referee = "") {
         matchId,
         winnerId,
         loserId,
-        referee
+        referee,
+        manners
       })
     });
     

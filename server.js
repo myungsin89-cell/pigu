@@ -50,7 +50,7 @@ app.get('/api/data', (req, res) => {
 
 // 2. POST /api/match/result
 app.post('/api/match/result', (req, res) => {
-  const { password, matchId, winnerId, loserId, referee } = req.body;
+  const { password, matchId, winnerId, loserId, referee, manners } = req.body;
   
   if (password !== '0000') {
     return res.status(401).json({ error: '비밀번호가 올바르지 않습니다.' });
@@ -83,7 +83,8 @@ app.post('/api/match/result', (req, res) => {
     match.result = {
       winner_id: winnerId,
       loser_id: loserId,
-      is_draw: false
+      is_draw: false,
+      manners: manners || []
     };
   }
   

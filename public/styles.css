@@ -1086,3 +1086,36 @@ body {
   border-top: 1px solid var(--border-color);
   padding-top: 15px;
 }
+
+/* --- 질서 및 배려 관련 추가 스타일 --- */
+.playoff-match-box.manners-podium {
+  background-color: #fff1f2;
+  border-color: #fecdd3;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.05);
+}
+
+.playoff-match-box.manners-podium .playoff-title {
+  color: #e11d48;
+  border-color: #fecdd3;
+}
+
+.playoff-match-box.manners-podium .playoff-team {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.playoff-match-box.manners-podium .playoff-team:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-sm);
+}
+
+#table-group-manners td:nth-child(4) {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #e11d48 !important;
+}
+
+.tab-sub-btn[data-group="manners"].active {
+  color: #e11d48 !important;
+  box-shadow: 0 2px 4px rgba(225, 29, 72, 0.08);
+}
