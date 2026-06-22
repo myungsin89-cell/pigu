@@ -219,6 +219,13 @@ app.post('/api/reset', async (req, res) => {
   }
 });
 
+// 5. GET /api/env-test (temporary debug endpoint)
+app.get('/api/env-test', (req, res) => {
+  const keys = Object.keys(process.env).filter(k => k.includes('KV') || k.includes('STORAGE') || k.includes('REDIS'));
+  res.json({ keys });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log('Database Env Keys:', Object.keys(process.env).filter(k => k.includes('KV') || k.includes('STORAGE') || k.includes('REDIS')));
 });
