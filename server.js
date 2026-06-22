@@ -34,8 +34,8 @@ function readLocalDB() {
 
 // Helper to read DB (Supports Vercel KV & Local fallback)
 async function readDB() {
-  const KV_URL = process.env.KV_REST_API_URL;
-  const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+  const KV_URL = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
   if (KV_URL && KV_TOKEN) {
     try {
@@ -72,8 +72,8 @@ async function readDB() {
 
 // Helper to write DB (Supports Vercel KV & Local fallback)
 async function writeDB(data) {
-  const KV_URL = process.env.KV_REST_API_URL;
-  const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+  const KV_URL = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
   if (KV_URL && KV_TOKEN) {
     try {
