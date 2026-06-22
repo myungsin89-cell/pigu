@@ -6,7 +6,7 @@ let state = {
   matches: [],
   playoffs: [],
   adminPassword: null, // Stores password once verified
-  selectedWeek: '1주',
+  selectedWeek: '오늘',
   selectedStandingsGroup: 'group_a', // 'group_a' or 'group_b'
   teamFilter: ''
 };
@@ -427,12 +427,64 @@ function renderFilters() {
   el.filterTeam.value = currentFilter;
 }
 
+// --- Get Today's Match Filter (주차 & 요일 계산) ---
+function getTodayMatchFilter() {
+  const today = new Date();
+  const startDate = new Date('2026-06-22'); // 대회 시작일 (월요일)
+  
+  // 시간 정보 제거
+  today.setHours(0,0,0,0);
+  startDate.setHours(0,0,0,0);
+  
+  const diffTime = today - startDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  // 주차 계산 (7일 간격)
+  const weekNum = Math.floor(diffDays / 7) + 1;
+  
+  // 요일 매핑
+  const daysHan = ["일", "월", "화", "수", "목", "금", "토"];
+  const dayHan = daysHan[today.getDay()];
+  
+  const isValidRange = (weekNum >= 1 && weekNum <= 4 && today.getDay() >= 1 && today.getDay() <= 5);
+  
+  return {
+    week: `${weekNum}주`,
+    day: dayHan,
+    isValid: isValidRange
+  };
+}
+
 // --- Render Matches List ---
 function renderMatches() {
   el.matchesContainer.innerHTML = '';
   
-  // Filter matches by selected week
-  let filtered = state.matches.filter(m => m.week === state.selectedWeek);
+  let filtered = [];
+  let isTodayTab = (state.selectedWeek === '오늘');
+  let todayFilter = null;
+  
+  if (isTodayTab) {
+    todayFilter = getTodayMatchFilter();
+    if (!todayFilter.isValid) {
+      el.matchesContainer.innerHTML = `
+        <div class="no-matches">
+          <i class="fa-solid fa-calendar-xmark" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 10px;"></i>
+          <div>오늘은 예정된 경기 일정이 없습니다.</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">대회 일정: 6/22 ~ 7/17 (평일 월~금 진행)</div>
+        </div>
+      `;
+      return;
+    }
+    
+    // 오늘 일반 경기 필터링
+    filtered = state.matches.filter(m => m.week === todayFilter.week && m.day === todayFilter.day);
+    
+    // 오늘 플레이오프 경기가 있다면 포함
+    const todayPlayoffs = state.playoffs.filter(p => p.week === todayFilter.week && p.day === todayFilter.day);
+    filtered = [...filtered, ...todayPlayoffs];
+  } else {
+    filtered = state.matches.filter(m => m.week === state.selectedWeek);
+  }
   
   // Filter by team if selected
   if (state.teamFilter) {
@@ -446,8 +498,24 @@ function renderMatches() {
   
   // Render cards
   filtered.forEach(match => {
-    const t1 = state.teams[match.team1_id] || { name: match.team1_id };
-    const t2 = state.teams[match.team2_id] || { name: match.team2_id };
+    let t1Name = '';
+    let t2Name = '';
+    let isPlayoff = match.id.startsWith('playoff_');
+    
+    if (isPlayoff) {
+      const standingsA = calculateStandings('group_a');
+      const standingsB = calculateStandings('group_b');
+      if (match.id === 'playoff_1') {
+        t1Name = standingsA[1] ? standingsA[1].name : '최강 2위';
+        t2Name = standingsB[1] ? standingsB[1].name : '무적 2위';
+      } else {
+        t1Name = standingsA[0] ? standingsA[0].name : '최강 1위';
+        t2Name = standingsB[0] ? standingsB[0].name : '무적 1위';
+      }
+    } else {
+      t1Name = (state.teams[match.team1_id] || { name: match.team1_id }).name;
+      t2Name = (state.teams[match.team2_id] || { name: match.team2_id }).name;
+    }
     
     const card = document.createElement('div');
     card.className = 'match-card';
@@ -472,14 +540,32 @@ function renderMatches() {
     let t1Class = 'match-team';
     let t2Class = 'match-team';
     if (match.result) {
-      if (match.result.winner_id === match.team1_id) {
-        t1Class += ' winner';
-        t2Class += ' loser';
-      } else if (match.result.winner_id === match.team2_id) {
-        t2Class += ' winner';
-        t1Class += ' loser';
+      const winnerId = match.result.winner_id;
+      if (isPlayoff) {
+        const standingsA = calculateStandings('group_a');
+        const standingsB = calculateStandings('group_b');
+        const t1Id = match.id === 'playoff_1' ? standingsA[1]?.id : standingsA[0]?.id;
+        const t2Id = match.id === 'playoff_1' ? standingsB[1]?.id : standingsB[0]?.id;
+        
+        if (winnerId === t1Id) {
+          t1Class += ' winner';
+          t2Class += ' loser';
+        } else if (winnerId === t2Id) {
+          t2Class += ' winner';
+          t1Class += ' loser';
+        }
+      } else {
+        if (match.result.winner_id === match.team1_id) {
+          t1Class += ' winner';
+          t2Class += ' loser';
+        } else if (match.result.winner_id === match.team2_id) {
+          t2Class += ' winner';
+          t1Class += ' loser';
+        }
       }
     }
+    
+    const tagStr = isPlayoff ? match.name : `${match.group_id === 'group_a' ? '최강리그' : '무적리그'} 예선`;
     
     card.innerHTML = `
       <div class="match-info-meta">
@@ -489,14 +575,14 @@ function renderMatches() {
         </div>
         <div class="match-meta-secondary">
           <span><i class="fa-solid fa-user-tie"></i> 심판: ${match.referee}</span>
-          <span><i class="fa-solid fa-tags"></i> ${match.group_id === 'group_a' ? '최강리그' : '무적리그'} 예선</span>
+          <span><i class="fa-solid fa-tags"></i> ${tagStr}</span>
         </div>
       </div>
       
       <div class="match-display">
-        <div class="${t1Class}">${t1.name}</div>
+        <div class="${t1Class}">${t1Name}</div>
         <div class="match-vs">VS</div>
-        <div class="${t2Class}">${t2.name}</div>
+        <div class="${t2Class}">${t2Name}</div>
       </div>
       
       <div class="match-card-actions">
@@ -512,10 +598,21 @@ function renderMatches() {
     el.matchesContainer.querySelectorAll('.edit-result-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const matchId = e.currentTarget.getAttribute('data-match-id');
-        const match = state.matches.find(m => m.id === matchId);
+        const match = state.matches.find(m => m.id === matchId) || state.playoffs.find(p => p.id === matchId);
         if (match) {
-          const team1 = state.teams[match.team1_id];
-          const team2 = state.teams[match.team2_id];
+          let team1 = state.teams[match.team1_id];
+          let team2 = state.teams[match.team2_id];
+          if (match.id.startsWith('playoff_')) {
+            const standingsA = calculateStandings('group_a');
+            const standingsB = calculateStandings('group_b');
+            if (match.id === 'playoff_1') {
+              team1 = standingsA[1];
+              team2 = standingsB[1];
+            } else {
+              team1 = standingsA[0];
+              team2 = standingsB[0];
+            }
+          }
           openResultModal(matchId, team1, team2, match.result);
         }
       });

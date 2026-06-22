@@ -258,7 +258,11 @@ body {
   display: grid;
   grid-template-columns: 5.5fr 6.5fr;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
+}
+
+.standings-card, .schedule-card {
+  height: 100%;
 }
 
 @media (max-width: 1024px) {
@@ -460,15 +464,15 @@ body {
 
 .bracket-wrapper {
   display: flex;
-  justify-content: space-around;
-  gap: 20px;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: nowrap;
 }
 
 .playoff-match-box {
   flex: 1;
-  min-width: 220px;
-  max-width: 280px;
+  min-width: 240px;
+  max-width: 360px;
   background-color: var(--accent-light);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -479,6 +483,17 @@ body {
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s ease;
   position: relative;
+}
+
+@media (max-width: 820px) {
+  .bracket-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .playoff-match-box {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 .playoff-match-box:hover {

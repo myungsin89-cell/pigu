@@ -107,82 +107,6 @@
               </table>
             </div>
           </div>
-
-          <!-- Playoff Bracket (결선 토너먼트) -->
-          <div class="card playoff-card">
-            <div class="card-header">
-              <h2><i class="fa-solid fa-diagram-project"></i> 실시간 예상 대진 및 현재 순위</h2>
-              <span class="card-subtitle">예선 경기 결과에 따른 실시간 예상 대진표입니다. 4주차에 각 조 1·2위 팀이 최종 순위 결정전(결승 및 3·4위전)을 치릅니다.</span>
-            </div>
-            <div class="playoff-bracket-container">
-              <!-- Bracket Visual Row -->
-              <div class="bracket-wrapper">
-                
-                <!-- 3·4위전 -->
-                <div class="playoff-match-box consolation">
-                  <div class="playoff-title">3·4위 결정전 <span class="time-tag">4주 목 3교시</span></div>
-                  <div class="teams-list" id="playoff-consolation-box">
-                    <!-- Team 1 -->
-                    <div class="playoff-team" id="playoff-t1-c">
-                      <span class="team-source-tag">최강리그 2위</span>
-                      <span class="team-name">대기 중</span>
-                      <span class="playoff-score">-</span>
-                    </div>
-                    <!-- Team 2 -->
-                    <div class="playoff-team" id="playoff-t2-c">
-                      <span class="team-source-tag">무적리그 2위</span>
-                      <span class="team-name">대기 중</span>
-                      <span class="playoff-score">-</span>
-                    </div>
-                  </div>
-                  <div class="playoff-referee" id="ref-consolation">심판: 김성관</div>
-                </div>
-
-                <!-- 결승전 -->
-                <div class="playoff-match-box final">
-                  <div class="playoff-title"><i class="fa-solid fa-crown gold-color"></i> 결승전 <span class="time-tag final-tag">4주 목 4교시</span></div>
-                  <div class="teams-list" id="playoff-final-box">
-                    <!-- Team 1 -->
-                    <div class="playoff-team" id="playoff-t1-f">
-                      <span class="team-source-tag">최강리그 1위</span>
-                      <span class="team-name">대기 중</span>
-                      <span class="playoff-score">-</span>
-                    </div>
-                    <!-- Team 2 -->
-                    <div class="playoff-team" id="playoff-t2-f">
-                      <span class="team-source-tag">무적리그 1위</span>
-                      <span class="team-name">대기 중</span>
-                      <span class="playoff-score">-</span>
-                    </div>
-                  </div>
-                  <div class="playoff-referee" id="ref-final">심판: 한승종</div>
-                </div>
-
-                <!-- 질서 및 배려 우수학급 -->
-                <div class="playoff-match-box manners-podium">
-                  <div class="playoff-title"><i class="fa-solid fa-heart" style="color: #e11d48;"></i> 질서 및 배려 우수 학급</div>
-                  <div class="teams-list">
-                    <!-- 1등 -->
-                    <div class="playoff-team winner" style="border-color: #fbbf24; background-color: #fffbeb;">
-                      <span class="team-source-tag" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d;">1등 (질서왕)</span>
-                      <span class="team-name" id="manners-1st-name" style="font-weight: 800; color: #b45309;">대기 중</span>
-                      <span class="playoff-score" id="manners-1st-score" style="color: #b45309;">-점</span>
-                    </div>
-                    <!-- 2등 -->
-                    <div class="playoff-team winner" style="border-color: #9ca3af; background-color: #f9fafb;">
-                      <span class="team-source-tag" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb;">2등 (배려왕)</span>
-                      <span class="team-name" id="manners-2nd-name" style="font-weight: 700; color: #4b5563;">대기 중</span>
-                      <span class="playoff-score" id="manners-2nd-score" style="color: #4b5563;">-점</span>
-                    </div>
-                  </div>
-                  <div class="playoff-referee" style="text-align: left; font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
-                    <i class="fa-solid fa-circle-info"></i> 전체 반 대상 누적 점수 순위
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
         </section>
         
         <!-- Right Column: Match Schedule & Results (경기 일정 및 결과) -->
@@ -204,7 +128,8 @@
 
             <!-- Week Tabs -->
             <div class="tabs-main">
-              <button class="tab-btn active" data-week="1주">1주차<span class="tab-date">6/22 ~ 6/26</span></button>
+              <button class="tab-btn active" data-week="오늘">오늘의 경기<span class="tab-date">실시간 일정</span></button>
+              <button class="tab-btn" data-week="1주">1주차<span class="tab-date">6/22 ~ 6/26</span></button>
               <button class="tab-btn" data-week="2주">2주차<span class="tab-date">6/29 ~ 7/3</span></button>
               <button class="tab-btn" data-week="3주">3주차<span class="tab-date">7/6 ~ 7/10</span></button>
               <button class="tab-btn" data-week="4주">4주차<span class="tab-date">7/13 ~ 7/17</span></button>
@@ -218,6 +143,86 @@
             </div>
           </div>
         </section>
+
+      </div>
+
+      <!-- Bottom Row: Playoff Bracket (결선 토너먼트) -->
+      <section class="section-playoff" style="margin-top: 20px;">
+        <div class="card playoff-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-diagram-project"></i> 실시간 예상 대진 및 현재 순위</h2>
+            <span class="card-subtitle">예선 경기 결과에 따른 실시간 예상 대진표입니다. 4주차에 각 조 1·2위 팀이 최종 순위 결정전(결승 및 3·4위전)을 치릅니다.</span>
+          </div>
+          <div class="playoff-bracket-container">
+            <!-- Bracket Visual Row -->
+            <div class="bracket-wrapper">
+              
+              <!-- 결승전 -->
+              <div class="playoff-match-box final">
+                <div class="playoff-title"><i class="fa-solid fa-crown gold-color"></i> 결승전 <span class="time-tag final-tag">4주 목 4교시</span></div>
+                <div class="teams-list" id="playoff-final-box">
+                  <!-- Team 1 -->
+                  <div class="playoff-team" id="playoff-t1-f">
+                    <span class="team-source-tag">최강리그 1위</span>
+                    <span class="team-name">대기 중</span>
+                    <span class="playoff-score">-</span>
+                  </div>
+                  <!-- Team 2 -->
+                  <div class="playoff-team" id="playoff-t2-f">
+                    <span class="team-source-tag">무적리그 1위</span>
+                    <span class="team-name">대기 중</span>
+                    <span class="playoff-score">-</span>
+                  </div>
+                </div>
+                <div class="playoff-referee" id="ref-final">심판: 한승종</div>
+              </div>
+
+              <!-- 3·4위전 -->
+              <div class="playoff-match-box consolation">
+                <div class="playoff-title">3·4위 결정전 <span class="time-tag">4주 목 3교시</span></div>
+                <div class="teams-list" id="playoff-consolation-box">
+                  <!-- Team 1 -->
+                  <div class="playoff-team" id="playoff-t1-c">
+                    <span class="team-source-tag">최강리그 2위</span>
+                    <span class="team-name">대기 중</span>
+                    <span class="playoff-score">-</span>
+                  </div>
+                  <!-- Team 2 -->
+                  <div class="playoff-team" id="playoff-t2-c">
+                    <span class="team-source-tag">무적리그 2위</span>
+                    <span class="team-name">대기 중</span>
+                    <span class="playoff-score">-</span>
+                  </div>
+                </div>
+                <div class="playoff-referee" id="ref-consolation">심판: 김성관</div>
+              </div>
+
+              <!-- 질서 및 배려 우수학급 -->
+              <div class="playoff-match-box manners-podium">
+                <div class="playoff-title"><i class="fa-solid fa-heart" style="color: #e11d48;"></i> 질서 및 배려 우수 학급</div>
+                <div class="teams-list">
+                  <!-- 1등 -->
+                  <div class="playoff-team winner" style="border-color: #fbbf24; background-color: #fffbeb;">
+                    <span class="team-source-tag" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d;">1등</span>
+                    <span class="team-name" id="manners-1st-name" style="font-weight: 800; color: #b45309;">대기 중</span>
+                    <span class="playoff-score" id="manners-1st-score" style="color: #b45309;">-점</span>
+                  </div>
+                  <!-- 2등 -->
+                  <div class="playoff-team winner" style="border-color: #9ca3af; background-color: #f9fafb;">
+                    <span class="team-source-tag" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb;">2등</span>
+                    <span class="team-name" id="manners-2nd-name" style="font-weight: 700; color: #4b5563;">대기 중</span>
+                    <span class="playoff-score" id="manners-2nd-score" style="color: #4b5563;">-점</span>
+                  </div>
+                </div>
+                <div class="playoff-referee" style="text-align: left; font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+                  <i class="fa-solid fa-circle-info"></i> 전체 반 대상 누적 점수 순위
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
 
       </div>
     </main>
