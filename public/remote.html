@@ -844,11 +844,13 @@
           <!-- 전송 및 초기화 버튼 -->
           <div class="action-row">
             <button class="btn-action-submit" data-match-id="${match.id}" ${isPlaceholder ? 'disabled' : ''}>
-              <i class="fa-solid fa-cloud-arrow-up"></i> 결과 전송
+              <i class="fa-solid fa-cloud-arrow-up"></i> ${hasResult ? '결과 수정' : '결과 전송'}
             </button>
-            <button class="btn-action-reset" data-match-id="${match.id}" ${isPlaceholder ? 'disabled' : ''}>
-              취소
+            ${hasResult ? `
+            <button class="btn-action-reset" data-match-id="${match.id}">
+              결과 취소
             </button>
+            ` : ''}
           </div>
         `;
         

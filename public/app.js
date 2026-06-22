@@ -72,6 +72,7 @@ const el = {
   vsT2WinBtn: document.getElementById('vs-t2-win-btn'),
   resultResetBtn: document.getElementById('result-reset-btn'),
   resultCancelBtn: document.getElementById('result-cancel-btn'),
+  resultSaveBtn: document.getElementById('result-save-btn'),
   mannersT1: document.getElementById('manners-t1'),
   mannersT2: document.getElementById('manners-t2'),
   mannersT1Name: document.getElementById('manners-t1-name'),
@@ -785,6 +786,11 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
   }
   
   if (!match) return;
+
+  // Fallback to state result if currentResult is not passed
+  if (!currentResult && match.result) {
+    currentResult = match.result;
+  }
   
   el.resultMatchInfo.textContent = `${match.week}차 ${match.day}요일 ${match.period} (${isPlayoff ? match.name : (match.group_id === 'group_a' ? '최강리그' : '무적리그') + ' 예선'})`;
   
@@ -812,13 +818,33 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
     el.vsT1WinBtn.disabled = true;
     el.vsT2WinBtn.disabled = true;
     el.resultResetBtn.disabled = true;
+    el.resultSaveBtn.disabled = true;
   } else {
     el.mannersT1.disabled = false;
     el.mannersT2.disabled = false;
     el.vsT1WinBtn.disabled = false;
     el.vsT2WinBtn.disabled = false;
     el.resultResetBtn.disabled = false;
+    el.resultSaveBtn.disabled = false;
   }
+
+  // Tracking selection in modal state
+  let modalSelectedWinnerId = currentResult ? currentResult.winner_id : null;
+
+  const updateWinnerHighlight = () => {
+    if (modalSelectedWinnerId === team1Obj?.id) {
+      el.vsT1WinBtn.className = 'btn btn-primary vs-win-btn';
+      el.vsT2WinBtn.className = 'btn btn-secondary vs-win-btn';
+    } else if (modalSelectedWinnerId === team2Obj?.id) {
+      el.vsT1WinBtn.className = 'btn btn-secondary vs-win-btn';
+      el.vsT2WinBtn.className = 'btn btn-primary vs-win-btn';
+    } else {
+      el.vsT1WinBtn.className = 'btn btn-secondary vs-win-btn';
+      el.vsT2WinBtn.className = 'btn btn-secondary vs-win-btn';
+    }
+  };
+
+  updateWinnerHighlight();
   
   // Helper to gather selected manners team IDs
   const getSelectedManners = () => {
@@ -828,12 +854,32 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
     return manners;
   };
   
-  // Set Win buttons state
-  el.vsT1WinBtn.onclick = () => submitResult(matchId, team1Obj?.id, team2Obj?.id, el.resultRefereeInput.value.trim(), getSelectedManners());
-  el.vsT2WinBtn.onclick = () => submitResult(matchId, team2Obj?.id, team1Obj?.id, el.resultRefereeInput.value.trim(), getSelectedManners());
+  // Set Win buttons state - Toggle selection instead of immediate submission
+  el.vsT1WinBtn.onclick = () => {
+    modalSelectedWinnerId = modalSelectedWinnerId === team1Obj?.id ? null : team1Obj?.id;
+    updateWinnerHighlight();
+  };
+  el.vsT2WinBtn.onclick = () => {
+    modalSelectedWinnerId = modalSelectedWinnerId === team2Obj?.id ? null : team2Obj?.id;
+    updateWinnerHighlight();
+  };
   
-  // Set result reset button
-  el.resultResetBtn.onclick = () => submitResult(matchId, null, null, el.resultRefereeInput.value.trim(), []);
+  // Set result save button
+  el.resultSaveBtn.onclick = () => {
+    if (!modalSelectedWinnerId) {
+      alert('승리한 반을 먼저 선택하고 저장해 주세요.');
+      return;
+    }
+    const loserId = modalSelectedWinnerId === team1Obj?.id ? team2Obj?.id : team1Obj?.id;
+    submitResult(matchId, modalSelectedWinnerId, loserId, el.resultRefereeInput.value.trim(), getSelectedManners());
+  };
+
+  // Set result reset button with confirmation
+  el.resultResetBtn.onclick = () => {
+    if (confirm('이 경기를 다시 대기 중 상태로 초기화하시겠습니까?')) {
+      submitResult(matchId, null, null, el.resultRefereeInput.value.trim(), []);
+    }
+  };
   
   el.resultModal.classList.remove('hidden');
 }
