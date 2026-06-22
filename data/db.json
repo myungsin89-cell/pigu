@@ -101,7 +101,15 @@
       "group_id": "group_b",
       "team1_id": "A2",
       "team2_id": "A1",
-      "result": null
+      "result": {
+        "winner_id": "A2",
+        "loser_id": "A1",
+        "is_draw": false,
+        "manners": [
+          "A2",
+          "A1"
+        ]
+      }
     },
     {
       "id": "match_2",
