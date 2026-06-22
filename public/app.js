@@ -272,9 +272,10 @@ function calculateStandings(groupId) {
     }
   });
   
-  // Sort standings: Points (desc) -> Won (desc) -> Name (asc)
+  // Sort standings: Points (desc) -> Played (asc) -> Won (desc) -> Name (asc)
   return Object.values(standings).sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
+    if (a.played !== b.played) return a.played - b.played;
     if (b.won !== a.won) return b.won - a.won;
     return a.name.localeCompare(b.name, 'ko');
   });

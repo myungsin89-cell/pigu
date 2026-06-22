@@ -692,7 +692,7 @@
       const standings = {};
       
       groupTeams.forEach(team => {
-        standings[team.id] = { id: team.id, name: team.name, won: 0, points: 0 };
+        standings[team.id] = { id: team.id, name: team.name, won: 0, points: 0, played: 0 };
       });
       
       state.matches.forEach(match => {
@@ -703,6 +703,8 @@
         const t2 = standings[match.team2_id];
         
         if (t1 && t2) {
+          t1.played++;
+          t2.played++;
           if (match.result.winner_id === match.team1_id) {
             t1.won++;
             t1.points += 1;
@@ -715,6 +717,7 @@
       
       return Object.values(standings).sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
+        if (a.played !== b.played) return a.played - b.played;
         if (b.won !== a.won) return b.won - a.won;
         return a.name.localeCompare(b.name, 'ko');
       });
