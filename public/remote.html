@@ -647,7 +647,7 @@
       try {
         dom.matchesList.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> 로딩 중...</div>';
         
-        const res = await fetch(config.apiDataUrl);
+        const res = await fetch(`${config.apiDataUrl}?t=${Date.now()}`);
         if (!res.ok) throw new Error('API 로드 실패');
         
         const db = await res.json();

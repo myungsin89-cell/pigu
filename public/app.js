@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- Fetch API Data ---
 async function fetchData() {
   try {
-    const res = await fetch('/api/data');
+    const res = await fetch('/api/data?t=' + Date.now());
     if (!res.ok) throw new Error('데이터 로드 실패');
     const db = await res.json();
     
