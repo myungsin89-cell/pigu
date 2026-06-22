@@ -1,6 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const Redis = require('ioredis');
+
+let redisClient = null;
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -32,11 +35,35 @@ function readLocalDB() {
   }
 }
 
-// Helper to read DB (Supports Vercel KV & Local fallback)
+// Helper to read DB (Supports Vercel KV, Redis & Local fallback)
 async function readDB() {
+  const REDIS_URL = process.env.REDIS_URL;
   const KV_URL = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
+  // 1. Try Vercel Redis (ioredis)
+  if (REDIS_URL) {
+    try {
+      if (!redisClient) {
+        redisClient = new Redis(REDIS_URL);
+      }
+      const val = await redisClient.get('pigu_db');
+      if (val) {
+        return JSON.parse(val);
+      } else {
+        console.log('pigu_db key not found in Redis. Bootstrapping with local db.json...');
+        const localDb = readLocalDB();
+        if (localDb) {
+          await writeDB(localDb);
+          return localDb;
+        }
+      }
+    } catch (err) {
+      console.error('Error reading from Redis:', err);
+    }
+  }
+
+  // 2. Try Vercel KV (REST API)
   if (KV_URL && KV_TOKEN) {
     try {
       const response = await fetch(KV_URL, {
@@ -63,18 +90,33 @@ async function readDB() {
       }
     } catch (err) {
       console.error('Error reading KV:', err);
-      return readLocalDB();
     }
   }
 
+  // 3. Fallback to local file
   return readLocalDB();
 }
 
-// Helper to write DB (Supports Vercel KV & Local fallback)
+// Helper to write DB (Supports Vercel KV, Redis & Local fallback)
 async function writeDB(data) {
+  const REDIS_URL = process.env.REDIS_URL;
   const KV_URL = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
   const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
+  // 1. Try Vercel Redis (ioredis)
+  if (REDIS_URL) {
+    try {
+      if (!redisClient) {
+        redisClient = new Redis(REDIS_URL);
+      }
+      await redisClient.set('pigu_db', JSON.stringify(data));
+      return true;
+    } catch (err) {
+      console.error('Error writing to Redis:', err);
+    }
+  }
+
+  // 2. Try Vercel KV (REST API)
   if (KV_URL && KV_TOKEN) {
     try {
       const response = await fetch(KV_URL, {
@@ -91,10 +133,10 @@ async function writeDB(data) {
       return true;
     } catch (err) {
       console.error('Error writing KV:', err);
-      return false;
     }
   }
 
+  // 3. Local filesystem fallback
   try {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
     return true;
