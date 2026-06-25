@@ -152,6 +152,18 @@ app.get('/api/data', async (req, res) => {
   if (!db) {
     return res.status(500).json({ error: '데이터베이스를 읽을 수 없습니다.' });
   }
+
+  // Migrate / force rules to draw-enabled with 3/1/0 points
+  if (!db.tournament.rules || !db.tournament.rules.has_draw || db.tournament.rules.win_point !== 3) {
+    console.log("Migrating database rules to draw-enabled: win=3, draw=1, lose=0");
+    if (!db.tournament.rules) db.tournament.rules = {};
+    db.tournament.rules.has_draw = true;
+    db.tournament.rules.win_point = 3;
+    db.tournament.rules.draw_point = 1;
+    db.tournament.rules.lose_point = 0;
+    await writeDB(db);
+  }
+
   res.json(db);
 });
 
@@ -187,6 +199,13 @@ app.post('/api/match/result', async (req, res) => {
   if (winnerId === null && loserId === null) {
     // Reset result
     match.result = null;
+  } else if (winnerId === 'draw') {
+    match.result = {
+      winner_id: null,
+      loser_id: null,
+      is_draw: true,
+      manners: manners || []
+    };
   } else {
     match.result = {
       winner_id: winnerId,

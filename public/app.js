@@ -70,6 +70,7 @@ const el = {
   vsT2Name: document.getElementById('vs-t2-name'),
   vsT1WinBtn: document.getElementById('vs-t1-win-btn'),
   vsT2WinBtn: document.getElementById('vs-t2-win-btn'),
+  vsDrawBtn: document.getElementById('vs-draw-btn'),
   resultResetBtn: document.getElementById('result-reset-btn'),
   resultCancelBtn: document.getElementById('result-cancel-btn'),
   resultSaveBtn: document.getElementById('result-save-btn'),
@@ -240,6 +241,7 @@ function calculateStandings(groupId) {
       name: team.name,
       played: 0,
       won: 0,
+      drawn: 0,
       lost: 0,
       points: 0,
       mannersPoints: allManners.find(m => m.id === team.id)?.mannersPoints || 0
@@ -258,7 +260,12 @@ function calculateStandings(groupId) {
       t1.played++;
       t2.played++;
       
-      if (match.result.winner_id === match.team1_id) {
+      if (match.result.is_draw) {
+        t1.drawn++;
+        t1.points += (state.tournament.rules.draw_point !== undefined ? state.tournament.rules.draw_point : 1);
+        t2.drawn++;
+        t2.points += (state.tournament.rules.draw_point !== undefined ? state.tournament.rules.draw_point : 1);
+      } else if (match.result.winner_id === match.team1_id) {
         t1.won++;
         t1.points += state.tournament.rules.win_point;
         t2.lost++;
@@ -306,6 +313,7 @@ function renderStandingsTable(standings, tbody) {
       <td>${teamNameStr}</td>
       <td>${team.played}</td>
       <td>${team.won}</td>
+      <td>${team.drawn}</td>
       <td>${team.lost}</td>
       <td>${team.points}</td>
       <td style="font-weight: 700; color: #e11d48;">${team.mannersPoints}점</td>
@@ -825,23 +833,35 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
     el.mannersT2.disabled = false;
     el.vsT1WinBtn.disabled = false;
     el.vsT2WinBtn.disabled = false;
+    el.vsDrawBtn.disabled = false;
     el.resultResetBtn.disabled = false;
     el.resultSaveBtn.disabled = false;
   }
 
+  // Show/Hide draw box based on playoff match type
+  const drawBox = document.getElementById('vs-draw-box');
+  if (drawBox) {
+    if (isPlayoff) {
+      drawBox.style.display = 'none';
+    } else {
+      drawBox.style.display = 'flex';
+    }
+  }
+
   // Tracking selection in modal state
-  let modalSelectedWinnerId = currentResult ? currentResult.winner_id : null;
+  let modalSelectedWinnerId = currentResult ? (currentResult.is_draw ? 'draw' : currentResult.winner_id) : null;
 
   const updateWinnerHighlight = () => {
+    el.vsT1WinBtn.className = 'btn btn-secondary vs-win-btn';
+    el.vsT2WinBtn.className = 'btn btn-secondary vs-win-btn';
+    el.vsDrawBtn.className = 'btn btn-secondary vs-win-btn';
+
     if (modalSelectedWinnerId === team1Obj?.id) {
       el.vsT1WinBtn.className = 'btn btn-primary vs-win-btn';
-      el.vsT2WinBtn.className = 'btn btn-secondary vs-win-btn';
     } else if (modalSelectedWinnerId === team2Obj?.id) {
-      el.vsT1WinBtn.className = 'btn btn-secondary vs-win-btn';
       el.vsT2WinBtn.className = 'btn btn-primary vs-win-btn';
-    } else {
-      el.vsT1WinBtn.className = 'btn btn-secondary vs-win-btn';
-      el.vsT2WinBtn.className = 'btn btn-secondary vs-win-btn';
+    } else if (modalSelectedWinnerId === 'draw') {
+      el.vsDrawBtn.className = 'btn btn-primary vs-win-btn';
     }
   };
 
@@ -855,7 +875,7 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
     return manners;
   };
   
-  // Set Win buttons state - Toggle selection instead of immediate submission
+  // Set Win buttons state - Toggle selection
   el.vsT1WinBtn.onclick = () => {
     modalSelectedWinnerId = modalSelectedWinnerId === team1Obj?.id ? null : team1Obj?.id;
     updateWinnerHighlight();
@@ -864,15 +884,29 @@ function openResultModal(matchId, team1Obj, team2Obj, currentResult = null) {
     modalSelectedWinnerId = modalSelectedWinnerId === team2Obj?.id ? null : team2Obj?.id;
     updateWinnerHighlight();
   };
+  el.vsDrawBtn.onclick = () => {
+    modalSelectedWinnerId = modalSelectedWinnerId === 'draw' ? null : 'draw';
+    updateWinnerHighlight();
+  };
   
   // Set result save button
   el.resultSaveBtn.onclick = () => {
     if (!modalSelectedWinnerId) {
-      alert('승리한 반을 먼저 선택하고 저장해 주세요.');
+      alert('승리한 반 또는 무승부를 선택하고 저장해 주세요.');
       return;
     }
-    const loserId = modalSelectedWinnerId === team1Obj?.id ? team2Obj?.id : team1Obj?.id;
-    submitResult(matchId, modalSelectedWinnerId, loserId, el.resultRefereeInput.value.trim(), getSelectedManners());
+    
+    let winnerId = null;
+    let loserId = null;
+    
+    if (modalSelectedWinnerId === 'draw') {
+      winnerId = 'draw';
+    } else {
+      winnerId = modalSelectedWinnerId;
+      loserId = (modalSelectedWinnerId === team1Obj?.id) ? team2Obj?.id : team1Obj?.id;
+    }
+    
+    submitResult(matchId, winnerId, loserId, el.resultRefereeInput.value.trim(), getSelectedManners());
   };
 
   // Set result reset button with confirmation

@@ -333,6 +333,19 @@
       color: white;
     }
 
+    .team-select-btn.draw-btn {
+      flex: 0.8;
+      background-color: #f3f4f6;
+      border-color: #d1d5db;
+      color: #4b5563;
+    }
+
+    .team-select-btn.draw-btn.selected {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
     .vs-txt {
       font-family: 'Outfit', sans-serif;
       font-weight: 800;
@@ -692,7 +705,7 @@
       const standings = {};
       
       groupTeams.forEach(team => {
-        standings[team.id] = { id: team.id, name: team.name, won: 0, points: 0, played: 0 };
+        standings[team.id] = { id: team.id, name: team.name, won: 0, drawn: 0, points: 0, played: 0 };
       });
       
       state.matches.forEach(match => {
@@ -705,12 +718,17 @@
         if (t1 && t2) {
           t1.played++;
           t2.played++;
-          if (match.result.winner_id === match.team1_id) {
-            t1.won++;
+          if (match.result.is_draw) {
+            t1.drawn++;
             t1.points += 1;
+            t2.drawn++;
+            t2.points += 1;
+          } else if (match.result.winner_id === match.team1_id) {
+            t1.won++;
+            t1.points += 3;
           } else if (match.result.winner_id === match.team2_id) {
             t2.won++;
-            t2.points += 1;
+            t2.points += 3;
           }
         }
       });
@@ -778,7 +796,7 @@
         }
         
         const hasResult = !!match.result;
-        const currentWinnerId = hasResult ? match.result.winner_id : null;
+        const currentWinnerId = hasResult ? (match.result.is_draw ? 'draw' : match.result.winner_id) : null;
         
         // Initialize selectedWinner in state if not set
         if (state.selectedWinner[match.id] === undefined) {
@@ -809,7 +827,17 @@
               <span>${t1Name}</span>
               <small style="font-size: 0.7rem; font-weight: normal; opacity: 0.8;">승리 선택</small>
             </button>
-            <span class="vs-txt">VS</span>
+            
+            ${!isPlayoff ? `
+            <button class="team-select-btn draw-btn ${state.selectedWinner[match.id] === 'draw' ? 'selected' : ''}" 
+                    data-match-id="${match.id}" 
+                    data-team-id="draw"
+                    ${isPlaceholder ? 'disabled' : ''}>
+              <span>무승부</span>
+              <small style="font-size: 0.7rem; font-weight: normal; opacity: 0.8;">선택</small>
+            </button>
+            ` : '<span class="vs-txt">VS</span>'}
+
             <button class="team-select-btn ${state.selectedWinner[match.id] === t2Id ? 'selected' : ''}" 
                     data-match-id="${match.id}" 
                     data-team-id="${t2Id}"
@@ -918,10 +946,14 @@
       // Determine loser ID
       const buttons = card.querySelectorAll('.team-select-btn');
       let loserId = '';
-      buttons.forEach(b => {
-        const tid = b.getAttribute('data-team-id');
-        if (tid !== winnerId) loserId = tid;
-      });
+      if (winnerId === 'draw') {
+        loserId = null;
+      } else {
+        buttons.forEach(b => {
+          const tid = b.getAttribute('data-team-id');
+          if (tid !== winnerId && tid !== 'draw') loserId = tid;
+        });
+      }
       
       // Gather manners selection
       const manners = [];

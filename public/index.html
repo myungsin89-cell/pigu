@@ -63,6 +63,7 @@
                     <th>반 이름</th>
                     <th>경기수</th>
                     <th>승</th>
+                    <th>무</th>
                     <th>패</th>
                     <th>승점</th>
                     <th>질서점수</th>
@@ -81,6 +82,7 @@
                     <th>반 이름</th>
                     <th>경기수</th>
                     <th>승</th>
+                    <th>무</th>
                     <th>패</th>
                     <th>승점</th>
                     <th>질서점수</th>
@@ -367,12 +369,15 @@
         <div class="vs-selector-container">
           <div class="vs-selection-box" id="vs-t1-box">
             <span class="vs-team-name" id="vs-t1-name">A1반</span>
-            <button class="btn btn-primary vs-win-btn" id="vs-t1-win-btn">승리</button>
+            <button class="btn btn-secondary vs-win-btn" id="vs-t1-win-btn">승리</button>
           </div>
-          <div class="vs-divider">VS</div>
+          <div class="vs-selection-box" id="vs-draw-box" style="flex: 0.8;">
+            <span class="vs-team-name" style="font-size: 0.95rem; color: var(--text-muted);">무승부</span>
+            <button class="btn btn-secondary vs-win-btn" id="vs-draw-btn" style="max-width: 90px;">선택</button>
+          </div>
           <div class="vs-selection-box" id="vs-t2-box">
             <span class="vs-team-name" id="vs-t2-name">A2반</span>
-            <button class="btn btn-primary vs-win-btn" id="vs-t2-win-btn">승리</button>
+            <button class="btn btn-secondary vs-win-btn" id="vs-t2-win-btn">승리</button>
           </div>
         </div>
 
